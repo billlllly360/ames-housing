@@ -1,0 +1,9 @@
+CatBoost run notes
+
+1,460 training rows; target = log(SalePrice).
+Five outer folds, three inner folds. Outer seed: 20273001.
+Depth: 4 or 6. L2: 3 or 10. Trees: 500, 1,000 or 2,000.
+Learning rate: 0.03. CPU, two threads.
+Parameters chosen by inner-fold MSE. Imputation uses fitting rows only.
+The earlier blend's OOF predictions were cached from the same outer split.
+It had a different tuning budget, so the comparison is exploratory.

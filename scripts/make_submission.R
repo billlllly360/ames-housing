@@ -1,0 +1,21 @@
+file <- sub("^--file=", "", grep("^--file=", commandArgs(FALSE), value = TRUE))
+root <- normalizePath(file.path(dirname(file), ".."), winslash = "/")
+source(file.path(root, "R", "paths.R"))
+source(file.path(root, "R", "features.R"))
+args <- read_args(list("data-dir" = file.path(root, "data"),
+  "model-dir" = file.path(root, "artifacts", "model"),
+  "output-dir" = file.path(root, "artifacts", "predictions"), "library" = file.path(root, ".R-library")))
+load_packages(args[["library"]])
+invisible(Sys.setlocale("LC_COLLATE", "C"))
+
+test <- read_data(args[["data-dir"]], "test")
+sample_file <- read_data(args[["data-dir"]], "sample_submission")
+model <- catboost::catboost.load_model(file.path(args[["model-dir"]], "catboost.cbm"))
+prep <- readRDS(file.path(args[["model-dir"]], "prep.rds"))
+test_pool <- catboost::catboost.load_pool(prep_data(add_features(test), prep))
+pred <- as.numeric(catboost::catboost.predict(model, test_pool))
+submission <- data.frame(Id = test$Id, SalePrice = exp(pred))
+check_submission(submission, test, sample_file)
+create_output(args[["output-dir"]])
+write.csv(submission, file.path(args[["output-dir"]], "submission.csv"), row.names = FALSE)
+cat("Saved submission.csv\n")
