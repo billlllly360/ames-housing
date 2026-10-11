@@ -1,5 +1,0 @@
-"model","kaggle_score","evidence","submission_timestamp"
-"Original XGBoost",0.12877,"User-provided submission screenshot",NA
-"Learned three-model blend",0.12575,"User-provided submission screenshot",NA
-"Original 50/50",0.12469,"User-provided submission screenshot",NA
-"CatBoost",0.12062,"User-provided submission screenshot",NA
